@@ -1,5 +1,6 @@
 const Goal = require('../models/Goal');
 const User = require('../models/user.model');
+const Group = require('../models/Group'); 
 
 const createGoal = async (req, res) => {
   try {
