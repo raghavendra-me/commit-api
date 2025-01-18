@@ -2,6 +2,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db.config');
 const authRoutes = require('./routes/auth.routes');
+const achievementRoutes = require('./routes/achievementRoutes');
+const groupRoutes = require('./routes/groupRoutes');
 const cors = require('cors');
 const goalRoutes = require('./routes/goalRoutes');
 const app = express();
@@ -33,8 +35,11 @@ app.use(cookieParser());
 connectDB();
 
 // Routes
+
+app.use('/api/achievements', achievementRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/groups', groupRoutes);
 // app.use('/api', welcomeRoutes);
 
 // Global error handler

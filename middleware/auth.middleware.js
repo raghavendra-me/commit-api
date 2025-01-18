@@ -6,7 +6,7 @@ const authenticateToken = (req, res, next) => {
         // Check for token in cookies first
         let token = req.cookies.token;
 
-        
+
         // If no cookie token, check Authorization header
         if (!token) {
             const authHeader = req.header('Authorization');
@@ -28,6 +28,7 @@ const authenticateToken = (req, res, next) => {
         
         // Set user data in request
         req.userId = decoded.userId;
+        console.log("userId:", req.userId);
         req.user = decoded; // Adding full decoded payload for flexibility
 
         next();
