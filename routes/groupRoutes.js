@@ -5,12 +5,12 @@ const validateGroup = require('../middleware/validateGroup');
 const {
     createGroup,
     getUserGroups,
-    addGroupMember
+    addMemberByEmail
 } = require('../controllers/groupController');
 
 // Group routes
 router.post('/create', authenticateToken, validateGroup, createGroup);
 router.get('/user-groups', authenticateToken, getUserGroups);
-router.post('/add-member', authenticateToken, addGroupMember);
+router.post('/add-member', authenticateToken, addMemberByEmail);
 
 module.exports = router;
