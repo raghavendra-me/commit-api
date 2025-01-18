@@ -64,6 +64,8 @@ const login = async (req, res) => {
             { expiresIn: jwtConfig.tokenExpiration }
         );
 
+        console.log('Token:', token);
+
         // Set cookie
         res.cookie('token', token, {
             httpOnly: true,

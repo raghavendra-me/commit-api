@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db.config');
 const authRoutes = require('./routes/auth.routes');
 const cors = require('cors');
-
+const goalRoutes = require('./routes/goalRoutes');
 const app = express();
 
 // CORS middleware should come before other middleware and routes
@@ -33,6 +33,7 @@ app.use(cookieParser());
 connectDB();
 
 // Routes
+app.use('/api/goals', goalRoutes);
 app.use('/api/auth', authRoutes);
 // app.use('/api', welcomeRoutes);
 

@@ -4,7 +4,7 @@ require('dotenv').config();
 const connectDB = async () => {
     try {
         // Replace with your actual MongoDB Atlas URI
-        const uri = "mongodb+srv://prakashcollymore:Phoneix@12@cluster0.myltf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+        const uri = "mongodb+srv://Raghu:system@cluster0.tvkq752.mongodb.net/your_database_name?retryWrites=true&w=majority";
 
         mongoose.set('strictQuery', false); // Add this to handle the deprecation warning
 
