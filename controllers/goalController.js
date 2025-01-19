@@ -104,7 +104,53 @@ const getGoals = async (req, res) => {
     }
 };
 
+const markGoalComplete = async (req, res) => {
+    try {
+        const { goalId } = req.params;
+        const userId = req.userId;
+
+        // Find the goal
+        const goal = await Goal.findById(goalId);
+
+        if (!goal) {
+            return res.status(404).json({
+                success: false,
+                message: "Goal not found"
+            });
+        }
+
+        // Verify the user owns this goal
+        if (goal.user.toString() !== userId) {
+            return res.status(403).json({
+                success: false,
+                message: "Not authorized to complete this goal"
+            });
+        }
+
+        // Update goal status and completion date
+        goal.status = 'completed';
+        goal.completedDate = new Date();
+        
+        await goal.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Goal marked as completed",
+            data: goal
+        });
+
+    } catch (error) {
+        console.error('Error in markGoalComplete:', error);
+        res.status(500).json({
+            success: false,
+            message: "Error completing goal",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
   createGoal,
-  getGoals
+  getGoals,
+  markGoalComplete
 };
