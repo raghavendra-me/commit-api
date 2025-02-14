@@ -127,17 +127,55 @@ const markGoalComplete = async (req, res) => {
             });
         }
 
-        // Update goal status and completion date
-        goal.status = 'completed';
-        goal.completedDate = new Date();
-        
-        await goal.save();
+        // Check if goal is already completed
+        if (goal.status === 'completed') {
+            return res.status(400).json({
+                success: false,
+                message: "Goal is already completed"
+            });
+        }
 
-        res.status(200).json({
-            success: true,
-            message: "Goal marked as completed",
-            data: goal
-        });
+        // Start a transaction
+        const session = await Goal.startSession();
+        session.startTransaction();
+
+        try {
+            // Update goal status and completion date
+            goal.status = 'completed';
+            goal.completedDate = new Date();
+            await goal.save({ session });
+
+            // Find user and update tokens
+            const user = await User.findById(userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+
+            // Add 10 tokens to user's balance
+            const REWARD_TOKENS = 10;
+            user.tokens = (user.tokens || 0) + REWARD_TOKENS;
+            await user.save({ session });
+
+            // Commit the transaction
+            await session.commitTransaction();
+
+            res.status(200).json({
+                success: true,
+                message: `Goal marked as completed. You earned ${REWARD_TOKENS} tokens!`,
+                data: {
+                    goal,
+                    tokensEarned: REWARD_TOKENS,
+                    newTokenBalance: user.tokens
+                }
+            });
+
+        } catch (error) {
+            // If anything fails, abort the transaction
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            session.endSession();
+        }
 
     } catch (error) {
         console.error('Error in markGoalComplete:', error);
